@@ -10,19 +10,18 @@ spec:
   template:
     metadata:
       labels:
-        name: tile38
+        name: tile38-follower
     spec:
       containers:
       - image: tile38/tile38:latest
         name: tile38
+        command: ['sh', '-c', 'cp /tmpconfig/config /data; tile38-server']
         ports:
         - name: tile38
           containerPort: 9851
         volumeMounts:
-            - name: tile38-data
-              mountPath: /data
             - name: tile38-config
-              mountPath: /data/data
+              mountPath: /tmpconfig
         resources:
           requests:
             memory: "128Mi"
@@ -36,8 +35,6 @@ spec:
           initialDelaySeconds: 10
           periodSeconds: 10
       volumes:
-        - name: tile38-data
-          emptyDir: {}
         - name: tile38-config
           configMap:
             name: follower-config
